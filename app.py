@@ -39,7 +39,6 @@ def input_page():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Read input values
         v1 = float(request.form['V1'])
         v2 = float(request.form['V2'])
         v3 = float(request.form['V3'])
@@ -49,18 +48,19 @@ def predict():
         selected_model = request.form['model']
 
         features = np.array([[v1, v2, v3, i1, i2, i3]])
-
-        # Get prediction
         model = models[selected_model]
         prediction_encoded = model.predict(features)
         prediction_label = le.inverse_transform(prediction_encoded)[0]
 
         return render_template('result.html',
                                model=selected_model,
-                               prediction=prediction_label)
+                               prediction=prediction_label,
+                               models=models.keys())
 
     except Exception as e:
-        return render_template('result.html', error=f"Result: {str(e)}")
+        return render_template('result.html',
+                               error=f"Result: {str(e)}",
+                               models=models.keys())
 
 if __name__ == '__main__':
     app.run(debug=True)
