@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Our Team</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * {
@@ -11,15 +12,16 @@
       box-sizing: border-box;
     }
 
-    body, html {
+    html, body {
       height: 100%;
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f4f4;
-      overflow: hidden;
+      background-color: #fff;
+      overscroll-behavior: none;
     }
 
     .team-profile {
-      height: 100vh;
+      height: 100dvh; /* ✅ dynamic full viewport on mobile */
       width: 100%;
       display: flex;
       align-items: center;
@@ -30,6 +32,8 @@
       padding: 20px;
       position: relative;
       transition: all 0.5s ease;
+      overflow: hidden;
+      touch-action: pan-y;
     }
 
     .team-profile img {
@@ -39,7 +43,6 @@
       border-radius: 50%;
       margin-bottom: 25px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      transition: transform 0.4s ease;
     }
 
     .team-profile h2 {
@@ -142,7 +145,7 @@
   </style>
 </head>
 <body>
-  <div class="team-profile" id="profile-container">
+  <div class="team-profile" id="profile-container" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event)">
     <div class="arrow left" onclick="prevProfile()"><i class="fas fa-chevron-left"></i></div>
     <div class="arrow right" onclick="nextProfile()"><i class="fas fa-chevron-right"></i></div>
     <div class="nav-dots" id="dots"></div>
@@ -164,7 +167,7 @@
       {
         photo: "/static/images/subarna.jpg",
         name: "Subarna Khadka - Electrical Systems Engineer 👨‍🔧",
-        description: "Subarna is responsible for developing the core MATLAB simulation model for power systems. He focuses on designing and simulating different fault scenarios, ensuring accurate electrical behavior, and generating quality datasets for machine learning. His domain expertise lies entirely in the electrical side of the project.",
+        description: "Subarna is responsible for developing the core MATLAB simulation model for power systems. He focuses on designing and simulating different fault scenarios, ensuring accurate electrical behavior, and generating quality datasets for machine learning.",
         socials: {
           facebook: "https://www.facebook.com/subarna.khadka.351",
           instagram: "https://www.instagram.com/its_me_subarna/",
@@ -172,28 +175,28 @@
           linkedin: "https://www.linkedin.com/in/subarna-khadka-b58804312/"
         }
       },
-      {
-        photo: "/static/images/sudesh.jpg",
-        name: "Sudesh Parajuli - Project Coordinator 📋",
-        description: "Sudesh manages the entire project workflow including documentation, reporting, proposal writing, and presentation design. He ensures that the project is well-documented and professionally presented for academic, client, or competition purposes.",
-        socials: {
-          facebook: "https://www.facebook.com/sudes.parajuli",
-          instagram: "https://www.instagram.com/sud_es_51/",
-          github: "#",
-          linkedin: "#"
-        }
+       {
+          photo: "/static/images/sudesh.jpg",
+          name: "Sudesh Parajuli - Project Coordinator 📋",
+          description: "Sudesh manages the entire project workflow including documentation, reporting, proposal writing, and presentation design. He ensures that the project is well-documented and professionally presented for academic, client, or competition purposes.",
+          socials: {
+            facebook: "https://www.facebook.com/sudes.parajuli",
+            instagram: "https://www.instagram.com/sud_es_51/",
+            github: "#",
+            linkedin: "#"
+         }
       },
-      {
-        photo: "/static/images/sagar.jpg",
-        name: "Sagar Shrestha - Technical Assistant 🧩",
-        description: "Sagar provides ongoing support across all project areas — from MATLAB to ML to documentation. He assists each member wherever needed, helping maintain smooth coordination and timely progress.",
-        socials: {
-          facebook: "https://www.facebook.com/profile.php?id=100016501716442",
-          instagram: "https://www.instagram.com/hawa1575_offical/",
-          github: "#",
-          linkedin: "#"
-        }
-      }
+        {
+          photo: "/static/images/sagar.jpg",
+          name: "Sagar Shrestha - Technical Assistant 🧩",
+          description: "Sagar provides ongoing support across all project areas — from MATLAB to ML to documentation. He assists each member wherever needed, helping maintain smooth coordination and timely progress.",
+          socials: {
+            facebook: "https://www.facebook.com/profile.php?id=100016501716442",
+            instagram: "https://www.instagram.com/hawa1575_offical/",
+            github: "#",
+            linkedin: "#"
+          }
+        },
     ];
 
     let currentIndex = 0;
@@ -204,15 +207,16 @@
 
       container.innerHTML = `
         <div class="arrow left" onclick="prevProfile()"><i class="fas fa-chevron-left"></i></div>
+        <div class="arrow right" onclick="nextProfile()"><i class="fas fa-chevron-right"></i></div>
         <img src="${member.photo}" alt="${member.name}">
         <h2>${member.name}</h2>
         <p>${member.description}</p>
         <div class="social-links">
           ${Object.entries(member.socials).map(([platform, link]) =>
-            link && link !== "#" ? `<a href="${link}" target="_blank"><i class="fab fa-${platform}"></i></a>` : ""
-          ).join("")}
+            link && link !== "#"
+              ? `<a href="${link}" target="_blank"><i class="fab fa-${platform}"></i></a>`
+              : "").join("")}
         </div>
-        <div class="arrow right" onclick="nextProfile()"><i class="fas fa-chevron-right"></i></div>
         <div class="nav-dots" id="dots"></div>
       `;
       updateDots();
@@ -242,31 +246,30 @@
       displayProfile(currentIndex);
     }
 
-    // Auto-slide every 7 seconds
-    let autoSlide = setInterval(nextProfile, 7000);
-
-    // Pause on hover
-    const container = document.getElementById("profile-container");
-    container.addEventListener("mouseenter", () => clearInterval(autoSlide));
-    container.addEventListener("mouseleave", () => autoSlide = setInterval(nextProfile, 7000));
-
     // Swipe gesture support
     let startX = 0;
-    container.addEventListener("touchstart", (e) => {
-      startX = e.touches[0].clientX;
-    });
 
-    container.addEventListener("touchend", (e) => {
-      const endX = e.changedTouches[0].clientX;
-      const deltaX = endX - startX;
-      if (Math.abs(deltaX) > 50) {
-        if (deltaX < 0) nextProfile(); // swipe left
-        else prevProfile();           // swipe right
+    function handleTouchStart(e) {
+      startX = e.touches[0].clientX;
+    }
+
+    function handleTouchMove(e) {
+      // prevent vertical scroll interference
+      if (Math.abs(e.touches[0].clientX - startX) > 20) {
+        e.preventDefault();
       }
-    });
+    }
+
+    function handleTouchEnd(e) {
+      const endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) {
+        nextProfile();
+      } else if (endX - startX > 50) {
+        prevProfile();
+      }
+    }
 
     window.onload = () => displayProfile(currentIndex);
   </script>
 </body>
 </html>
-
