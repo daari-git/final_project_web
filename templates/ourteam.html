@@ -39,6 +39,7 @@
       border-radius: 50%;
       margin-bottom: 25px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      transition: transform 0.4s ease;
     }
 
     .team-profile h2 {
@@ -149,9 +150,9 @@
 
   <script>
     const teamMembers = [
-    {
+      {
         photo: "/static/images/subash.jpg",
-        name: "Subash Khanal - ML Engineer  🤖",
+        name: "Subash Khanal - ML Engineer 🤖",
         description: "Subash creates and trains the machine learning models that detect and classify power system faults. Using the datasets generated from the MATLAB simulations, he applies and fine-tunes various ML algorithms to improve prediction accuracy and system reliability.",
         socials: {
           facebook: "https://www.facebook.com/kamalsubash.khanal",
@@ -202,15 +203,16 @@
       const container = document.getElementById("profile-container");
 
       container.innerHTML = `
+        <div class="arrow left" onclick="prevProfile()"><i class="fas fa-chevron-left"></i></div>
         <img src="${member.photo}" alt="${member.name}">
         <h2>${member.name}</h2>
         <p>${member.description}</p>
         <div class="social-links">
           ${Object.entries(member.socials).map(([platform, link]) =>
-            link && link !== "#"
-              ? `<a href="${link}" target="_blank"><i class="fab fa-${platform}"></i></a>`
-              : "").join("")}
+            link && link !== "#" ? `<a href="${link}" target="_blank"><i class="fab fa-${platform}"></i></a>` : ""
+          ).join("")}
         </div>
+        <div class="arrow right" onclick="nextProfile()"><i class="fas fa-chevron-right"></i></div>
         <div class="nav-dots" id="dots"></div>
       `;
       updateDots();
@@ -230,7 +232,41 @@
       });
     }
 
+    function nextProfile() {
+      currentIndex = (currentIndex + 1) % teamMembers.length;
+      displayProfile(currentIndex);
+    }
+
+    function prevProfile() {
+      currentIndex = (currentIndex - 1 + teamMembers.length) % teamMembers.length;
+      displayProfile(currentIndex);
+    }
+
+    // Auto-slide every 7 seconds
+    let autoSlide = setInterval(nextProfile, 7000);
+
+    // Pause on hover
+    const container = document.getElementById("profile-container");
+    container.addEventListener("mouseenter", () => clearInterval(autoSlide));
+    container.addEventListener("mouseleave", () => autoSlide = setInterval(nextProfile, 7000));
+
+    // Swipe gesture support
+    let startX = 0;
+    container.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    container.addEventListener("touchend", (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const deltaX = endX - startX;
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX < 0) nextProfile(); // swipe left
+        else prevProfile();           // swipe right
+      }
+    });
+
     window.onload = () => displayProfile(currentIndex);
   </script>
 </body>
 </html>
+
