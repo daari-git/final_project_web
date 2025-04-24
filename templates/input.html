@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Power Fault Prediction</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #e3e9f0, #d1dce9);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #3a49f9, #4410a1);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            color: #3a49f9;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card input[type="text"] {
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #d4d4d4;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .footer {
+            padding: 20px 30px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer label {
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .footer select {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .footer input[type="submit"],
+        .footer .button {
+            padding: 10px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .footer input[type="submit"] {
+            background-color: #3a49f9;
+            color: white;
+        }
+
+        .footer input[type="submit"]:hover {
+            background-color: #2e3ccc;
+        }
+
+        .footer .button {
+            background-color: #e90000;
+            color: white;
+        }
+
+        .footer .button:hover {
+            background-color: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .form-section {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .footer input[type="submit"],
+            .footer .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Power System Monitoring</h1>
+        <p>Real-time voltage and current analysis</p>
+    </div>
+
+    <form action="/predict" method="post">
+        <div class="form-section">
+            <div class="card">
+                <h3>⚡ Voltages</h3>
+                <input type="text" name="V1" placeholder="Phase A (V)" required>
+                <input type="text" name="V2" placeholder="Phase B (V)" required>
+                <input type="text" name="V3" placeholder="Phase C (V)" required>
+            </div>
+
+            <div class="card">
+                <h3>🔌 Currents</h3>
+                <input type="text" name="I1" placeholder="Phase A (A)" required>
+                <input type="text" name="I2" placeholder="Phase B (A)" required>
+                <input type="text" name="I3" placeholder="Phase C (A)" required>
+            </div>
+        </div>
+
+        <div class="footer">
+            <label for="model">Select Model:</label>
+            <select name="model" required>
+                <option value="KNN">K-Nearest Neighbors</option>
+                <option value="Random Forest">Random Forest</option>
+                <option value="Decision Tree">Decision Tree</option>
+            </select>
+            
+            <div class="button-group">
+                <input type="submit" value="Predict Fault">
+                <a href="/homepage" class="button">Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
